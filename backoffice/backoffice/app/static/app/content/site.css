@@ -49,3 +49,17 @@ input[type="checkbox"].input-validation-error {
     height: 20%;
     width: 20%;
 }*/
+
+.btn-delete, .btn-delete:hover, .btn-delete:active, .btn-delete:visited {
+    background-color: #ff5889;
+    color: white;
+}
+
+.btn-email, .btn-email:hover, .btn-email:active, .btn-email:visited {
+    background-color: #FFBD68;
+    color: white;
+}
+
+form {
+    margin-bottom: 0;
+}

@@ -16,6 +16,8 @@ from django.contrib.auth.decorators import login_required
 from app.models import MongoCollection
 
 import bson
+import random
+import string
 import logging
 
 logger = logging.getLogger(__name__)
@@ -33,18 +35,43 @@ def home(request):
         {
             'title':'Accueil',
             'year':datetime.now().year
-        }
-    )
+        })
+
+@login_required
+def send_email(request, methods=["POST"]):
+    ack = 40
+    return redirect('manage_gym', ack)
+
+@login_required
+def delete_gym(request, methods=["POST"]):
+    ack = 30
+    return redirect('manage_gym', ack)
 
 @login_required
 def add_gym(request, methods=["POST"]):
     db = MongoCollection('fitness_centers', 'centralefitness', 'localhost', 27017)
+    form = GymForm(request.POST)
+    ack = 0
+    if form.is_valid():
+        ret = db.collection.insert_one({
+            'apiKey': ''.join(random.choice('abcdef' + string.digits) for _ in range(24)),
+            'name': form.cleaned_data['name'],
+            'description': form.cleaned_data['desc'],
+            'address': form.cleaned_data['address'],
+            'address_second': form.cleaned_data['alt_address'],
+            'zip_code': form.cleaned_data['zip'],
+            'city': form.cleaned_data['city'],
+            'phone_number': form.cleaned_data['phone'],
+            'email': form.cleaned_data['email']           
+            })
+        ack = 1 if ret.acknowledged else 2
+    return redirect('manage_gym', ack)
 
-    return redirect('manage_gym')
 
 @login_required
 def update_field(request, methods=["POST"]):
     db = MongoCollection('fitness_centers', 'centralefitness', 'localhost', 27017)
+    ack = 10
     ret = db.collection.update_one(
         {
             "_id": bson.ObjectId(request.POST['id'])
@@ -54,7 +81,8 @@ def update_field(request, methods=["POST"]):
                 request.POST['field']: request.POST['new_value']
             }
         })
-    return redirect('manage_gym')
+    ack = 11 if ret.modified_count > 0 else 12
+    return redirect('manage_gym', ack)
 
 @login_required
 def edit_field(request, methods=["POST"]):
@@ -71,7 +99,7 @@ def edit_field(request, methods=["POST"]):
         })
 
 @login_required
-def manage_gym(request):
+def manage_gym(request, ack: int=-1):
     db = MongoCollection('fitness_centers', 'centralefitness', 'localhost', 27017)
     items = db.collection.find()
     gyms = list()
@@ -85,7 +113,8 @@ def manage_gym(request):
         {
             'gyms': gyms,
             'year': datetime.now().year,
-            'form': gym_form
+            'form': gym_form,
+            'ack': ack
         })
 
 @login_required

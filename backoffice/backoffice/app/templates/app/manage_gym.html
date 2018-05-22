@@ -13,7 +13,33 @@
     <p><img class="toplogo" src="../../static/app/athlete.png" align="left"><h1>Gestionnaire de salle</h1></p>
     <hr />
 
-    <!--<p>Clé unique propre au module relais. Générer une nouvelle clé induit l'écrasement de la clé courante par une nouvelle.</p>-->
+    <!--<form class="form-horizontal" action="{% url 'add_gym' %}" method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {% for field in form %}
+        <div class="form-group">
+            {{ field.errors }}
+            <label class="control-label col-sm-2" for="{{ field.id_for_label }}">{{ field.label }}:</label>
+            <div class="col-sm-10">
+                {{ field|add_class:"form-control"|attr:"placeholder:field.label" }}
+            </div>
+            {% if field.help_text %}
+            <p class="help">{{ field.help_text|safe }}</p>
+            {% endif %}
+            </div>
+        {% endfor %}
+    </form>-->
+
+    <h3>Créer une nouvelle salle</h3>
+
+    {% if ack == '0' %}
+    <p style="color:red">Erreur: Formulaire non valide</p>
+    {% elif ack == '1' %}
+    <p>Nouvelle salle crée avec succès</p>
+    {% elif ack == '2' %}
+    <p style="color:red">Erreur lors de la création de la salle</p>
+    {% endif %}
+
     <form class="form-horizontal" action="{% url 'add_gym' %}" method="post">
         {% csrf_token %}
         {{ form.non_field_errors }}
@@ -28,68 +54,82 @@
             {{ form.desc.errors }}
             <label class="control-label col-sm-2" for="{{ form.desc.id_for_label }}">Description:</label>
             <div class="col-sm-10">
-                {{ form.desc }}
+                {{ form.desc|add_class:"form-control"|attr:"placeholder:Description" }}
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-sm-2" for="address">Adresse:</label>
+            {{ form.address.errors }}
+            <label class="control-label col-sm-2" for="{{ from.address.id_for_label }}">Adresse:</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" name="address" placeholder="Addresse">
+                {{ form.address|add_class:"form-control"|attr:"placeholder:Adresse" }}
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-sm-2" for="address_s">Adresse secondaire:</label>
+            {{ form.alt_address.errors }}
+            <label class="control-label col-sm-2" for="{{ form.address.id_for_label }}">Adresse secondaire:</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" name="address_s" placeholder="Addresse secondaire">
+                {{ form.alt_address|add_class:"form-control"|attr:"placeholder:Adresse secondaire" }}
             </div>
         </div>
 
         <div class="form-group">
-            <label class="control-label col-sm-2" for="zip">Code postal:</label>
+            {{ form.zip.errors }}
+            <label class="control-label col-sm-2" for="{{ form.zip.id_for_label }}">Code postal:</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" name="zip" placeholder="00000">
+                {{ form.zip|add_class:"form-control"|attr:"placeholder:00000" }}
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-sm-2" for="city">Ville:</label>
+            {{ form.city.errors }}
+            <label class="control-label col-sm-2" for="{{ form.city.id_for_label }}">Ville:</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" name="city" placeholder="Ville">
+                {{ form.city|add_class:"form-control"|attr:"placeholder:Ville" }}
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-sm-2" for="phone">Numéro de téléphone:</label>
+            {{ form.phone.errors }}
+            <label class="control-label col-sm-2" for="{{ form.phone.id_for_label }}">Numéro de téléphone:</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" name="phone" placeholder="0412345678">
+                {{ form.phone|add_class:"form-control"|attr:"placeholder:0412345678" }}
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-sm-2" for="email">Email:</label>
+            {{ form.email.errors }}
+            <label class="control-label col-sm-2" for="{{ form.email.id_for_label }}">Email:</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" name="email" placeholder="@">
+                {{ form.email|add_class:"form-control"|attr:"placeholder:@" }}
             </div>
         </div>
-
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-default">Submit</button>
+                <button type="submit" class="btn btn-default">Valider</button>
             </div>
         </div>
     </form>
 
     <hr />
+    <h3>Gérer les salles existantes</h3>
+    {% if ack == '10' %}
+    <p style="color:red">Erreur: Formulaire non valide</p>
+    {% elif ack == '11' %}
+    <p>Modification effectuée avec succès</p>
+    {% elif ack == '12' %}
+    <p style="color:red">Erreur lors de la modification</p>
+    {% endif %}
+
     {% if gyms %}
     {% for gym in gyms %}
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>Description</th>
+                <th class="col-xs-2">Description</th>
                 <th>Data</th>
-                <th>Edit</th>
+                <th class="col-xs-1">Edit</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <th>apiKey</th>
+                <th>Clé d'API</th>
                 <td>{{ gym.apiKey }}</td>
                 <td>
                     <form action="{% url 'edit_field' %}" method="post">
@@ -102,8 +142,8 @@
                 </td>
             </tr>
             <tr>
-                <th>name</th>
-                <td>{{ gym.name }}</td>
+                <th>Nom</th>
+                <td><b>{{ gym.name }}</b></td>
                 <td>
                     <form action="{% url 'edit_field' %}" method="post">
                         {% csrf_token %}
@@ -115,7 +155,7 @@
                 </td>
             </tr>
             <tr>
-                <th>description</th>
+                <th>Description</th>
                 <td>{{ gym.description }}</td>
                 <td>
                     <form action="{% url 'edit_field' %}" method="post">
@@ -128,7 +168,7 @@
                 </td>
             </tr>
             <tr>
-                <th>address</th>
+                <th>Adresse</th>
                 <td>{{ gym.address }}</td>
                 <td>
                     <form action="{% url 'edit_field' %}" method="post">
@@ -141,7 +181,7 @@
                 </td>
             </tr>
             <tr>
-                <th>address_second</th>
+                <th>Adresse 2</th>
                 <td>{{ gym.address_second }}</td>
                 <td>
                     <form action="{% url 'edit_field' %}" method="post">
@@ -154,7 +194,7 @@
                 </td>
             </tr>
             <tr>
-                <th>zip_code</th>
+                <th>Code postal</th>
                 <td>{{ gym.zip_code }}</td>
                 <td>
                     <form action="{% url 'edit_field' %}" method="post">
@@ -167,7 +207,7 @@
                 </td>
             </tr>
             <tr>
-                <th>city</th>
+                <th>Ville</th>
                 <td>{{ gym.city }}</td>
                 <td>
                     <form action="{% url 'edit_field' %}" method="post">
@@ -180,7 +220,7 @@
                 </td>
             </tr>
             <tr>
-                <th>phone_number</th>
+                <th>Téléphone</th>
                 <td>{{ gym.phone_number }}</td>
                 <td>
                     <form action="{% url 'edit_field' %}" method="post">
@@ -193,7 +233,7 @@
                 </td>
             </tr>
             <tr>
-                <th>email</th>
+                <th>Email</th>
                 <td>{{ gym.email }}</td>
                 <td>
                     <form action="{% url 'edit_field' %}" method="post">
@@ -207,15 +247,33 @@
             </tr>
         </tbody>
     </table>
-    {% endfor %}
-    {% else %}
-    <p>Pas de cl&eacute; d'API enregistr&eacute;e</p>
-    <p>Nouveau client Centrale Fitness ? Renseigner la cl&eacute; d'API reçue par email &agrave; l'adresse renseign&eacute;e lors de votre inscription.</p>
-    <form method="POST" class="key-form">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="save btn btn-default">Save</button>
-    </form>
-    {% endif %}
-</div>
+
+    <div class="row">
+        <div class="col-md-2">
+            <form class="form-horizontal" action="{% url 'delete_gym' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{ gym.id }}" />
+                <button type="submit" class="btn btn-delete btn-default">Supprimer la salle</button>
+            </form>
+        </div>
+        <div class="col-md-2">
+            <form class="form-horizontal" action="{% url 'send_email' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{ gym.id }}" />
+                <button type="submit" class="btn btn-email btn-default">Envoyer la clé d'API</button>
+            </form>
+        </div>
+    </div>
+    <hr/>
+        {% endfor %}
+        {% else %}
+        <p>Pas de cl&eacute; d'API enregistr&eacute;e</p>
+        <p>Nouveau client Centrale Fitness ? Renseigner la cl&eacute; d'API reçue par email &agrave; l'adresse renseign&eacute;e lors de votre inscription.</p>
+        <form method="POST" class="key-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="save btn btn-default">Save</button>
+        </form>
+        {% endif %}
+    </div>
 {% endblock %}

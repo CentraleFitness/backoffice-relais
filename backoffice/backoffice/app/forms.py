@@ -27,9 +27,9 @@ class apiKeyForm(forms.ModelForm):
 
 class GymForm(forms.Form):
     name = forms.CharField()
-    desc = forms.CharField()
+    desc = forms.CharField(required=False)
     address = forms.CharField()
-    alt_adress = forms.CharField()
+    alt_address = forms.CharField(required=False)
     zip = forms.CharField(max_length=5, min_length=5)
     city = forms.CharField()
     phone = forms.CharField(max_length=10, min_length=10)
