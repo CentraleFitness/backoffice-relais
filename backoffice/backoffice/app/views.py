@@ -10,7 +10,7 @@ from datetime import timedelta, date
 from django.shortcuts import redirect
 from datetime import datetime
 from .models import apiKey
-from .forms import apiKeyForm
+from .forms import apiKeyForm, GymForm
 from django.contrib.auth.decorators import login_required
 
 from app.models import MongoCollection
@@ -35,6 +35,12 @@ def home(request):
             'year':datetime.now().year
         }
     )
+
+@login_required
+def add_gym(request, methods=["POST"]):
+    db = MongoCollection('fitness_centers', 'centralefitness', 'localhost', 27017)
+
+    return redirect('manage_gym')
 
 @login_required
 def update_field(request, methods=["POST"]):
@@ -72,12 +78,14 @@ def manage_gym(request):
     for gym in items:
         gym['id'] = gym.pop('_id')
         gyms.append(gym)
+    gym_form = GymForm()
     return render(
         request,
         'app/manage_gym.html',
         {
             'gyms': gyms,
-            'year': datetime.now().year
+            'year': datetime.now().year,
+            'form': gym_form
         })
 
 @login_required

@@ -23,3 +23,14 @@ class apiKeyForm(forms.ModelForm):
     class Meta:
         model = apiKey
         fields = ('api_key',)
+
+
+class GymForm(forms.Form):
+    name = forms.CharField()
+    desc = forms.CharField()
+    address = forms.CharField()
+    alt_adress = forms.CharField()
+    zip = forms.CharField(max_length=5, min_length=5)
+    city = forms.CharField()
+    phone = forms.CharField(max_length=10, min_length=10)
+    email = forms.EmailField()
