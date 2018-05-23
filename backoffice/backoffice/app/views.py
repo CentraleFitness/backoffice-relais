@@ -22,7 +22,21 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-
+ACK = {
+    'ADD_GENERIC_KO': 0,
+    'ADD_OK': 1,
+    'ADD_FAIL': 2,
+    'UPDATE_GENERIC_KO': 10,
+    'UPDATE_OK': 11,
+    'UPDATE_FAIL': 12,
+    # 20, 21, 22
+    'DELETE_GENERIC_KO': 30,
+    'DELETE_OK': 31,
+    'DELETE_FAIL': 32,
+    'SEND_GENERIC_KO': 40,
+    'SEND_OK': 41,
+    'SEND_FAIL': 42
+}
 
 @login_required
 def home(request):
@@ -44,7 +58,10 @@ def send_email(request, methods=["POST"]):
 
 @login_required
 def delete_gym(request, methods=["POST"]):
+    db = MongoCollection('fitness_centers', 'centralefitness', 'localhost', 27017)
     ack = 30
+    ret = db.collection.delete_one({'_id': bson.ObjectId(request.POST['id'])})
+    ack = 31 if ret.deleted_count > 0 else 32
     return redirect('manage_gym', ack)
 
 @login_required
@@ -93,6 +110,7 @@ def edit_field(request, methods=["POST"]):
         request, 
         'app/edit_field.html',
         {
+            'title': 'Edition',
             'id': object_id,
             'field': field_name,
             'value': value
@@ -111,6 +129,7 @@ def manage_gym(request, ack: int=-1):
         request,
         'app/manage_gym.html',
         {
+            'title': 'Gestion',
             'gyms': gyms,
             'year': datetime.now().year,
             'form': gym_form,
@@ -137,6 +156,7 @@ def manage_key(request):
         request,
         'app/manage_key.html',
         {
+            'title': 'Gestion',
             'keys': keys,
             'form': form,
             'year':datetime.now().year,

@@ -32,5 +32,5 @@ class GymForm(forms.Form):
     alt_address = forms.CharField(required=False)
     zip = forms.CharField(max_length=5, min_length=5)
     city = forms.CharField()
-    phone = forms.CharField(max_length=10, min_length=10)
+    phone = forms.CharField(max_length=10, min_length=10, required=False)
     email = forms.EmailField()
