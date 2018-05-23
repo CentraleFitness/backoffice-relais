@@ -16,8 +16,8 @@ admin.autodiscover()
 
 urlpatterns = [ 
     url(r'^$', app.views.home, name='home'),
-    url(r'^manage_key$', app.views.manage_key, name='manage_key'),
-    url(r'^manage_key/delete/$', app.views.delete_key, name='delete_key'),
+    #url(r'^manage_key$', app.views.manage_key, name='manage_key'),
+    #url(r'^manage_key/delete/$', app.views.delete_key, name='delete_key'),
     url(r'^manage_gym$', app.views.manage_gym, name='manage_gym'),
     url(r'^manage_gym/(?P<ack>(\d+))$', app.views.manage_gym, name='manage_gym'),
     url(r'^manage_gym/edit_field/$', app.views.edit_field, name='edit_field'),
@@ -25,7 +25,7 @@ urlpatterns = [
     url(r'^manage_gym/add_gym/$', app.views.add_gym, name='add_gym'),
     url(r'^manage_gym/delete/$', app.views.delete_gym, name='delete_gym'),
     url(r'^manage_gym/send_email/$', app.views.send_email, name='send_email'),
-    url(r'^support$', app.views.support, name="support"),
+    #url(r'^support$', app.views.support, name="support"),
     url(r'^login/$',
         django.contrib.auth.views.login,
         {

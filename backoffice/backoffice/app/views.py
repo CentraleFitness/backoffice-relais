@@ -113,7 +113,8 @@ def update_field(request):
     return redirect('manage_gym', ack)
 
 @login_required
-def edit_field(request, methods=["POST"]):
+@require_POST
+def edit_field(request):
     object_id = request.POST['id']
     field_name = request.POST['field']
     value = request.POST['value']
@@ -147,48 +148,49 @@ def manage_gym(request, ack: int=-1):
             'ack': ack
         })
 
-@login_required
-def manage_key(request):
-    if request.method == "POST":
-        form = apiKeyForm(request.POST)
-        if form.is_valid():
-            apiKey.objects.all().delete()
-            key = form.save(commit=False)
-            key.date_creation = datetime.now()
-            current_year = datetime.now().year
-            now = datetime.now()
-            key.date_expiration = datetime(current_year + 1, now.month, now.day, now.hour, now.minute, now.second)
-            key.save()
-            return redirect('manage_key')
-    else:
-        form = apiKeyForm()
-    keys = apiKey.objects.all()
-    return render(
-        request,
-        'app/manage_key.html',
-        {
-            'title': 'Gestion',
-            'keys': keys,
-            'form': form,
-            'year':datetime.now().year,
-        }
-    )
+#@login_required
+#def manage_key(request):
+#    if request.method == "POST":
+#        form = apiKeyForm(request.POST)
+#        if form.is_valid():
+#            apiKey.objects.all().delete()
+#            key = form.save(commit=False)
+#            key.date_creation = datetime.now()
+#            current_year = datetime.now().year
+#            now = datetime.now()
+#            key.date_expiration = datetime(current_year + 1, now.month, now.day, now.hour, now.minute, now.second)
+#            key.save()
+#            return redirect('manage_key')
+#    else:
+#        form = apiKeyForm()
+#    keys = apiKey.objects.all()
+#    return render(
+#        request,
+#        'app/manage_key.html',
+#        {
+#            'title': 'Gestion',
+#            'keys': keys,
+#            'form': form,
+#            'year':datetime.now().year,
+#        }
+#    )
 
-def delete_key(request):
-    if request.method == "POST":
-        key_value = request.POST.get('api_key')
-        nb_del, _ = apiKey.objects.get(api_key=key_value).delete()
-    return redirect('manage_key')
+#@login_required
+#@require_POST
+#def delete_key(request):
+#    key_value = request.POST.get('api_key')
+#    nb_del, _ = apiKey.objects.get(api_key=key_value).delete()
+#    return redirect('manage_key')
 
-@login_required
-def support(request):
-    """Render the Support page."""
-    assert isinstance(request, HttpRequest)
-    return render(
-        request,
-        'app/support.html',
-        {
-            'title': 'Support',
-            'message': '',
-        }
-    )
+#@login_required
+#def support(request):
+#    """Render the Support page."""
+#    assert isinstance(request, HttpRequest)
+#    return render(
+#        request,
+#        'app/support.html',
+#        {
+#            'title': 'Support',
+#            'message': '',
+#        }
+#    )
