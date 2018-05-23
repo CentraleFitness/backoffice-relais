@@ -12,6 +12,8 @@ from datetime import datetime
 from .models import apiKey
 from .forms import apiKeyForm, GymForm
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
+
 
 from app.models import MongoCollection
 
@@ -19,6 +21,7 @@ import bson
 import random
 import string
 import logging
+import requests
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +45,6 @@ ACK = {
 def home(request):
     """Renders the home page."""
     assert isinstance(request, HttpRequest)
-    logger.debug('home')
     return render(
         request,
         'app/index.html',
@@ -52,12 +54,19 @@ def home(request):
         })
 
 @login_required
-def send_email(request, methods=["POST"]):
+@require_POST
+def send_email(request):
     ack = 40
+    ret = requests.post('http://127.0.0.1:5541/send_email', data={
+        'cf': 42,
+        'id': request.POST['id']
+        })
+    print(ret)
     return redirect('manage_gym', ack)
 
 @login_required
-def delete_gym(request, methods=["POST"]):
+@require_POST
+def delete_gym(request):
     db = MongoCollection('fitness_centers', 'centralefitness', 'localhost', 27017)
     ack = 30
     ret = db.collection.delete_one({'_id': bson.ObjectId(request.POST['id'])})
@@ -65,7 +74,8 @@ def delete_gym(request, methods=["POST"]):
     return redirect('manage_gym', ack)
 
 @login_required
-def add_gym(request, methods=["POST"]):
+@require_POST
+def add_gym(request):
     db = MongoCollection('fitness_centers', 'centralefitness', 'localhost', 27017)
     form = GymForm(request.POST)
     ack = 0
@@ -86,7 +96,8 @@ def add_gym(request, methods=["POST"]):
 
 
 @login_required
-def update_field(request, methods=["POST"]):
+@require_POST
+def update_field(request):
     db = MongoCollection('fitness_centers', 'centralefitness', 'localhost', 27017)
     ack = 10
     ret = db.collection.update_one(
@@ -173,7 +184,6 @@ def delete_key(request):
 def support(request):
     """Render the Support page."""
     assert isinstance(request, HttpRequest)
-    logger.debug('support')
     return render(
         request,
         'app/support.html',
