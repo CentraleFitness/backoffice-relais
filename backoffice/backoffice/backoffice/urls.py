@@ -24,7 +24,7 @@ urlpatterns = [
     url(r'^manage_gym/update_field/$', app.views.update_field, name='update_field'),
     url(r'^manage_gym/add_gym/$', app.views.add_gym, name='add_gym'),
     url(r'^manage_gym/delete/$', app.views.delete_gym, name='delete_gym'),
-    url(r'^manage_gym/send_email/$', app.views.send_email, name='send_email'),
+    url(r'^manage_gym/send_email/$', app.views.send_api_email, name='send_email'),
     #url(r'^support$', app.views.support, name="support"),
     url(r'^login/$',
         django.contrib.auth.views.login,

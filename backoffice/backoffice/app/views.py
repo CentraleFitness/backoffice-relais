@@ -55,13 +55,19 @@ def home(request):
 
 @login_required
 @require_POST
-def send_email(request):
+def send_api_email(request):
     ack = 40
     ret = requests.post('http://127.0.0.1:5541/send_email', data={
         'cf': 42,
         'id': request.POST['id']
         })
     print(ret)
+    return redirect('manage_gym', ack)
+
+@login_required
+@require_POST
+def send_newsletter_email(request):
+    ack = 50
     return redirect('manage_gym', ack)
 
 @login_required
