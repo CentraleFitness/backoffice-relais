@@ -68,6 +68,11 @@ def send_api_email(request):
 @require_POST
 def send_newsletter_email(request):
     ack = 50
+    ret = requests.post('http://127.0.0.1:4456/send_newsletter', data={
+        'cf': 43,
+        'id': request.POST['id']
+        })
+    print(ret)
     return redirect('manage_gym', ack)
 
 @login_required

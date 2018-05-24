@@ -272,6 +272,13 @@
                 <button type="submit" class="btn btn-email btn-default">Envoyer la clé d'API</button>
             </form>
         </div>
+        <div class="col-md-2">
+            <form class="form-horizontal" action="{% url 'send_newsletter' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{ gym.id }}" />
+                <button type="submit" class="btn btn-news btn-default">Envoyer la newsletter</button>
+            </form>
+        </div>
     </div>
 
     <hr />

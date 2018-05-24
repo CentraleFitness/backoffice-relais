@@ -60,6 +60,13 @@ input[type="checkbox"].input-validation-error {
     color: white;
 }
 
+.btn-news, .btn-news:hover, .btn-news:active, .btn-news:visited {
+    background-color: #6c5b7b;
+    color: white;
+}
+
+
+
 form {
     margin-bottom: 0;
 }
