@@ -141,7 +141,7 @@ def edit_field(request):
 
 @login_required
 def manage_gym(request, ack: int=-1):
-    db = MongoCollection('fitness_centers', 'centralefitness', 'localhost', 27017)
+    db = MongoCollection('fitness_centers', 'centralefitness', 'localhost', 27017) ## TODO: Unable to connect
     items = db.collection.find()
     gyms = list()
     for gym in items:
